@@ -16,6 +16,17 @@ module.exports = class Router {
         endpoint[method] = handler
     }
 
+    use(basePath, router) {
+        Object.keys(router.endpoints).forEach((path) => {
+            const fullPath = basePath + path
+            const endpoint = router.endpoints[path]
+            Object.keys(endpoint).forEach((method) => {
+                const handler = endpoint[method]
+                this.request(method, fullPath, handler)
+            })
+        })
+    }
+
     get(path, handler) {
         this.request('GET', path, handler)
     }

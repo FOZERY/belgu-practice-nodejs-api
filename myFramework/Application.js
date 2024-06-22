@@ -54,13 +54,13 @@ class Application {
                 if (err instanceof NotFoundError) {
                     console.error(err)
                     res.writeHead(err.statusCode, {
-                        'Content-Type': 'text/plain',
+                        'Content-Type': 'application/json',
                     })
                     res.end(err.message)
                 } else {
                     console.error(err)
                     res.writeHead(500, {
-                        'Content-Type': 'text/plain',
+                        'Content-Type': 'application/json',
                     })
                     res.end(err.message)
                 }
