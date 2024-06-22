@@ -3,7 +3,7 @@ module.exports = class Router {
         this.endpoints = {}
     }
 
-    request(method = 'GET', path, handler) {
+    request(method = 'GET', path, handlers) {
         if (!this.endpoints[path]) {
             this.endpoints[path] = {}
         }
@@ -13,7 +13,7 @@ module.exports = class Router {
             throw new Error(`[${method}] по адресу ${path} уже существует`)
         }
 
-        endpoint[method] = handler
+        endpoint[method] = handlers
     }
 
     use(basePath, router) {
@@ -27,19 +27,19 @@ module.exports = class Router {
         })
     }
 
-    get(path, handler) {
-        this.request('GET', path, handler)
+    get(path, ...handlers) {
+        this.request('GET', path, handlers)
     }
 
-    post(path, handler) {
-        this.request('POST', path, handler)
+    post(path, ...handlers) {
+        this.request('POST', path, handlers)
     }
 
-    put(path, handler) {
-        this.request('PUT', path, handler)
+    put(path, ...handlers) {
+        this.request('PUT', path, handlers)
     }
 
-    delete(path, handler) {
-        this.request('DELETE', path, handler)
+    delete(path, ...handlers) {
+        this.request('DELETE', path, handlers)
     }
 }

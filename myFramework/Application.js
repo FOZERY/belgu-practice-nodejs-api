@@ -33,12 +33,37 @@ class Application {
     _handleRouter(router, req, res, next) {
         const endpoint = router.endpoints[req.url]
         if (endpoint) {
-            const handler = endpoint[req.method]
-            if (handler) {
-                return handler(req, res, (next = null))
+            const handlers = endpoint[req.method]
+
+            if (handlers && handlers.length > 0) {
+                this._runHandlers(handlers, req, res, next)
+                return
             }
         }
         next(new NotFoundError('Not found'))
+    }
+
+    _runHandlers(handlers, req, res, next) {
+        let index = 0
+
+        const runNext = (err) => {
+            if (err) {
+                return next(err)
+            }
+
+            if (index >= handlers.length) {
+                return next() // ??
+            }
+
+            const handler = handlers[index++]
+            try {
+                handler(req, res, runNext)
+            } catch (err) {
+                next(err)
+            }
+        }
+
+        runNext()
     }
 
     _createServer() {
@@ -50,19 +75,23 @@ class Application {
                 }
 
                 await this._createMiddlewareChain(req, res)
+
+                if (!res.writableEnded) {
+                    throw new NotFoundError(`Cannot GET ${req.url}`)
+                }
             } catch (err) {
                 if (err instanceof NotFoundError) {
                     console.error(err)
                     res.writeHead(err.statusCode, {
                         'Content-Type': 'application/json',
                     })
-                    res.end(err.message)
+                    res.end(JSON.stringify({ message: err.message }))
                 } else {
                     console.error(err)
                     res.writeHead(500, {
                         'Content-Type': 'application/json',
                     })
-                    res.end(err.message)
+                    res.end(JSON.stringify({ message: err.message }))
                 }
             }
         })
