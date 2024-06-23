@@ -12,7 +12,6 @@
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.5.0",
-    "db-migrate-pg": "^1.5.2",
     "eslint": "^9.5.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
@@ -23,6 +22,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "db-migrate": "^0.11.14",
+    "db-migrate-pg": "^1.5.2",
     "dotenv": "^16.4.5",
     "pg": "^8.12.0"
   }

@@ -1,7 +1,7 @@
 BEGIN;
 
 CREATE TABLE student(
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SERIAL PRIMARY KEY,
     group_id INT NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     second_name VARCHAR(50) NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE student(
 );
 
 CREATE TABLE "group"(
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SERIAL PRIMARY KEY,
     department_id INT NOT NULL,
     group_number VARCHAR(20) NOT NULL,
     group_name VARCHAR(100) NOT NULL
@@ -22,7 +22,7 @@ CREATE TABLE group_lesson(
 );
 
 CREATE TABLE teacher(
-   id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+   id SERIAL PRIMARY KEY,
    department_id INT NOT NULL,
    position_id INT NOT NULL,
    first_name VARCHAR(50) NOT NULL,
@@ -31,30 +31,29 @@ CREATE TABLE teacher(
 );
 
 CREATE TABLE department(
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SERIAL PRIMARY KEY,
     department_name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE position(
-   id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+   id SERIAL PRIMARY KEY,
    position_name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE course(
-   id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-   teacher_id INT,
+   id SERIAL PRIMARY KEY,
    course_name VARCHAR(80) NOT NULL,
    course_description VARCHAR(255)
 );
 
 CREATE TABLE student_course(
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SERIAL PRIMARY KEY,
     course_id INT NOT NULL,
     student_id INT NOT NULL
 );
 
 CREATE TABLE grade(
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SERIAL PRIMARY KEY,
     student_course_id INT NOT NULL,
     lesson_id INT NOT NULL,
     grade INT NOT NULL,
@@ -62,7 +61,7 @@ CREATE TABLE grade(
 );
 
 CREATE TABLE lesson(
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SERIAL PRIMARY KEY,
     course_id INT NOT NULL,
     teacher_id INT NOT NULL,
     classroom_id INT,
@@ -73,25 +72,25 @@ CREATE TABLE lesson(
 );
 
 CREATE TABLE lesson_type(
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SERIAL PRIMARY KEY,
     type_name VARCHAR(70) NOT NULL
 );
 
 CREATE TABLE classroom(
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SERIAL PRIMARY KEY,
     classroom_building VARCHAR(255) NOT NULL,
     classroom_number VARCHAR(5) NOT NULL
 );
 
 CREATE TABLE attendance(
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SERIAL PRIMARY KEY,
     student_id INT NOT NULL,
     lesson_id INT NOT NULL,
     attendance_status_id INT NOT NULL
 );
 
 CREATE TABLE attendance_status(
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SERIAL PRIMARY KEY,
     attendance_status VARCHAR(255) NOT NULL
 );
 
@@ -102,14 +101,14 @@ CREATE TABLE teacher_course(
 );
 
 CREATE TABLE "user"(
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SERIAL PRIMARY KEY,
     user_role_id INT NOT NULL,
-    email INT NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE user_role(
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id SERIAL PRIMARY KEY,
     role_name VARCHAR(30) NOT NULL
 );
 
@@ -127,8 +126,6 @@ ALTER TABLE group_lesson ADD CONSTRAINT fk_group_lesson_lesson FOREIGN KEY (less
 
 ALTER TABLE teacher ADD CONSTRAINT fk_teacher_department FOREIGN KEY (department_id) REFERENCES department(id);
 ALTER TABLE teacher ADD CONSTRAINT fk_teacher_position FOREIGN KEY (position_id) REFERENCES position(id);
-
-ALTER TABLE course ADD CONSTRAINT fk_course_teacher FOREIGN KEY (teacher_id) REFERENCES teacher(id);
 
 ALTER TABLE student_course ADD CONSTRAINT fk_student_course_course FOREIGN KEY (course_id) REFERENCES course(id);
 ALTER TABLE student_course ADD CONSTRAINT fk_student_course_student FOREIGN KEY (student_id) REFERENCES student(id);

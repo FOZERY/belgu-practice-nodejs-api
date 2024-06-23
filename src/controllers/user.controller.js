@@ -1,8 +1,10 @@
-const getUsers = (req, res) => {
-    res.statusCode = 404
-    res.end('Not Found')
+const db = require('../../db')
+
+class userController {
+    async getAll(req, res) {
+        const users = await db.query('SELECT * FROM user')
+        res.json(users.rows)
+    }
 }
 
-module.exports = {
-    getUsers,
-}
+module.exports = new userController()

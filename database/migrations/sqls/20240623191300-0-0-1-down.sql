@@ -39,8 +39,6 @@ ALTER TABLE group_lesson DROP CONSTRAINT fk_group_lesson_lesson;
 ALTER TABLE teacher DROP CONSTRAINT fk_teacher_department;
 ALTER TABLE teacher DROP CONSTRAINT fk_teacher_position;
 
-ALTER TABLE course DROP CONSTRAINT fk_course_teacher;
-
 ALTER TABLE student_course DROP CONSTRAINT fk_student_course_course;
 ALTER TABLE student_course DROP CONSTRAINT fk_student_course_student;
 
