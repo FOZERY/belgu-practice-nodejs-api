@@ -1,13 +1,8 @@
-const db = require('../../db')
-
 const LessonModel = require('../models/lesson.model')
 const CourseModel = require('../models/course.model')
 
 class TeacherService {
-    async getAll(req, res) {
-        const teachers = await db.query('SELECT * FROM teacher')
-        return res.json({ message: teachers.rows })
-    }
+    async getAll() {}
 
     async getTeacherCourses(teacher_id) {
         return await CourseModel.getCoursesByTeacherId(teacher_id)
