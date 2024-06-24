@@ -42,7 +42,6 @@ module.exports = class Router {
     }
 
     match(pathname) {
-        console.log(pathname)
         for (let [path, methods] of this.endpoints) {
             const paramNames = []
             const regexPath = path.replace(/:([^/]+)/g, (_, key) => {

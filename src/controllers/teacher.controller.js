@@ -1,10 +1,39 @@
 const db = require('../../db')
 const ApiError = require('../error/ApiError')
 
+const teacherService = require('../services/teacher.service')
+
 class teacherController {
     async getAll(req, res) {
-        const teachers = await db.query('SELECT * FROM teacher')
-        return res.json({ message: teachers.rows })
+        return res.status(404)
+    }
+
+    async getTeacherCourses(req, res, next) {
+        try {
+            const { id } = req.params
+            if (!id || isNaN(id)) {
+                throw ApiError.badRequest('Не задан ID')
+            }
+
+            const courses = await teacherService.getTeacherCourses(id)
+            res.json(courses)
+        } catch (e) {
+            return next(e)
+        }
+    }
+
+    async getTeacherLessons(req, res, next) {
+        try {
+            const { id } = req.params
+            if (!id || isNaN(id)) {
+                throw ApiError.badRequest('Не задан ID')
+            }
+
+            const lessons = await teacherService.getTeacherLessons(id)
+            res.json(lessons)
+        } catch (e) {
+            return next(e)
+        }
     }
 }
 
