@@ -1,5 +1,7 @@
 const http = require('http')
 const EventEmitter = require('events')
+const parseUrl = require('./utils/parseUrl')
+const addResStatus = require('./utils/addResStatus')
 
 const NotFoundError = require('./error/NotFoundError')
 
@@ -20,18 +22,21 @@ class Application {
 
     createRouterMiddleware(basePath, router) {
         return (req, res, next) => {
-            if (!req.url.startsWith(basePath)) {
+            if (!req.pathname.startsWith(basePath)) {
                 throw new NotFoundError('Not found')
             }
 
-            const subPath = req.url.slice(basePath.length) || '/'
-            req.url = subPath
+            let subPath = req.pathname.slice(basePath.length)
+            if (!subPath.endsWith('/')) {
+                subPath += '/'
+            }
+            req.pathname = subPath
             this._handleRouter(router, req, res, next) // вернется либо next() либо handler()
         }
     }
 
     _handleRouter(router, req, res, next) {
-        const endpoint = router.endpoints[req.url]
+        const endpoint = router.endpoints[req.pathname]
         if (endpoint) {
             const handlers = endpoint[req.method]
 
@@ -69,10 +74,8 @@ class Application {
     _createServer() {
         return http.createServer(async (req, res) => {
             try {
-                res.status = (statusCode) => {
-                    res.statusCode = statusCode
-                    return res
-                }
+                addResStatus(res)
+                parseUrl(req)
 
                 await this._createMiddlewareChain(req, res)
 
