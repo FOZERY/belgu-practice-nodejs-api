@@ -19,6 +19,9 @@ module.exports = [
                 {
                     'usePrettierrc': true,
                 },
+                {
+                    "endOfLine": auto
+                }
             ],
         },
     },
