@@ -31,15 +31,17 @@ class Application {
                 subPath += '/'
             }
             req.pathname = subPath
+
             this._handleRouter(router, req, res, next) // вернется либо next() либо handler()
         }
     }
 
     _handleRouter(router, req, res, next) {
-        const endpoint = router.endpoints.get(req.pathname)
-        if (endpoint) {
-            const handlers = endpoint.get(req.method)
-
+        const match = router.match(req.pathname)
+        if (match) {
+            const { methods, params } = match
+            req.params = params
+            const handlers = methods.get(req.method)
             if (handlers && handlers.length > 0) {
                 this._runHandlers(handlers, req, res, next)
                 return
@@ -142,10 +144,6 @@ class Application {
 
             next()
         })
-    }
-
-    _getRouteMask(path, method) {
-        return `[${path}]:[${method}]`
     }
 }
 

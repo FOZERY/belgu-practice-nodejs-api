@@ -40,4 +40,25 @@ module.exports = class Router {
     delete(path, ...handlers) {
         this.request('DELETE', path, handlers)
     }
+
+    match(pathname) {
+        console.log(pathname)
+        for (let [path, methods] of this.endpoints) {
+            const paramNames = []
+            const regexPath = path.replace(/:([^/]+)/g, (_, key) => {
+                paramNames.push(key)
+                return '([^/]+)'
+            })
+            const match = pathname.match(new RegExp(`^${regexPath}/?$`))
+
+            if (match) {
+                const params = {}
+                paramNames.forEach((name, index) => {
+                    params[name] = match[index + 1]
+                })
+                return { methods, params }
+            }
+        }
+        return null
+    }
 }
