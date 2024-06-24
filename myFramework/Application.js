@@ -36,9 +36,9 @@ class Application {
     }
 
     _handleRouter(router, req, res, next) {
-        const endpoint = router.endpoints[req.pathname]
+        const endpoint = router.endpoints.get(req.pathname)
         if (endpoint) {
-            const handlers = endpoint[req.method]
+            const handlers = endpoint.get(req.method)
 
             if (handlers && handlers.length > 0) {
                 this._runHandlers(handlers, req, res, next)

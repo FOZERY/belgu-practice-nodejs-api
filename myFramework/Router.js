@@ -1,27 +1,25 @@
 module.exports = class Router {
     constructor() {
-        this.endpoints = {}
+        this.endpoints = new Map()
     }
 
     request(method = 'GET', path, handlers) {
-        if (!this.endpoints[path]) {
-            this.endpoints[path] = {}
+        if (!this.endpoints.has(path)) {
+            this.endpoints.set(path, new Map())
         }
-        const endpoint = this.endpoints[path]
+        const endpoint = this.endpoints.get(path)
 
-        if (endpoint[method]) {
+        if (endpoint.has(method)) {
             throw new Error(`[${method}] по адресу ${path} уже существует`)
         }
 
-        endpoint[method] = handlers
+        endpoint.set(method, handlers)
     }
 
     use(basePath, router) {
-        Object.keys(router.endpoints).forEach((path) => {
+        router.endpoints.forEach((endpoint, path) => {
             const fullPath = basePath + path
-            const endpoint = router.endpoints[path]
-            Object.keys(endpoint).forEach((method) => {
-                const handler = endpoint[method]
+            endpoint.forEach((handler, method) => {
                 this.request(method, fullPath, handler)
             })
         })
