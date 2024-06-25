@@ -180,6 +180,11 @@ INSERT INTO lesson (id, course_id, teacher_id, classroom_id, lesson_type_id, les
 (9, 9, 9, 9, 9, '2024-06-09', '17:00', '18:30'),
 (10, 10, 10, 10, 10, '2024-06-10', '18:00', '19:30');
 
+INSERT INTO group_lesson (group_id, lesson_id) VALUES
+(1,1),
+(2,1),
+(3,1); 
+
 -- Insert attendance statuses
 INSERT INTO attendance_status (id, attendance_status) VALUES
 (1, 'Present'),

@@ -26,6 +26,8 @@ DELETE FROM classroom;
 -- Delete from student_course
 DELETE FROM student_course;
 
+DELETE FROM group_course;
+
 -- Delete from course
 DELETE FROM course;
 
@@ -53,7 +55,7 @@ DELETE FROM user_role;
 -- Reset sequences to ensure IDs start from 1 again
 DO $$ DECLARE
     seq RECORD;
-BEGIN
+BEGIN 
     FOR seq IN 
         SELECT sequence_name 
         FROM information_schema.sequences
