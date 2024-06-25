@@ -26,18 +26,22 @@ module.exports = class Router {
     }
 
     get(path, ...handlers) {
+        handlers = handlers.flat()
         this.request('GET', path, handlers)
     }
 
     post(path, ...handlers) {
+        handlers = handlers.flat()
         this.request('POST', path, handlers)
     }
 
     put(path, ...handlers) {
+        handlers = handlers.flat()
         this.request('PUT', path, handlers)
     }
 
     delete(path, ...handlers) {
+        handlers = handlers.flat()
         this.request('DELETE', path, handlers)
     }
 
