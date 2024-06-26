@@ -14,6 +14,8 @@ DELETE FROM attendance_status;
 -- Delete from teacher_course
 DELETE FROM teacher_course;
 
+DELETE FROM group_lesson;
+
 -- Delete from lesson
 DELETE FROM lesson;
 
