@@ -1,5 +1,6 @@
 const LessonModel = require('../models/lesson.model')
 const CourseModel = require('../models/course.model')
+const TeacherModel = require('../models/teacher.model')
 
 class TeacherService {
     async getAll() {}
@@ -19,6 +20,10 @@ class TeacherService {
         }
 
         return lessons
+    }
+
+    async getTeacherByUserId(user_id) {
+        return await TeacherModel.getTeacherByUserId(user_id)
     }
 }
 

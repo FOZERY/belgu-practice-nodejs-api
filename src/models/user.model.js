@@ -18,7 +18,7 @@ class UserModel {
         return rows[0]
     }
 
-    async createUser(params) {
+    async createUser(params, client) {
         const query = `INSERT INTO "user" (email, password, user_role_id)
         VALUES($1, $2, $3)
         RETURNING *
@@ -28,7 +28,7 @@ class UserModel {
 
         const values = [email, password, user_role_id]
 
-        const { rows } = await db.query(query, values)
+        const { rows } = await client.query(query, values)
         return rows[0]
     }
 }
