@@ -11,8 +11,26 @@ const generateAccessToken = (params) => {
 }
 
 const userService = require('../services/user.service')
+const studentService = require('../services/student.service')
+const teacherService = require('../services/teacher.service')
 
 class userController {
+    async getOneUser(req, res, next) {
+        try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({
+                    message: 'Ошибка при получении пользователя',
+                    errors: errors.errors,
+                })
+            }
+            const id = req.params
+            res.json(id)
+        } catch (e) {
+            next(e)
+        }
+    }
+
     async getAllUsers(req, res, next) {
         try {
             const users = await userService.getAll()
@@ -108,6 +126,13 @@ class userController {
 
     async login(req, res, next) {
         try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({
+                    message: 'Ошибка при авторизации',
+                    errors: errors.errors,
+                })
+            }
             const { email, password } = req.body
             const user = await userService.getOne({ email })
 
@@ -149,6 +174,33 @@ class userController {
             })
 
             return res.json({ token })
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getUserFullInfo(req, res, next) {
+        try {
+            const { userData } = req
+
+            let userInfo
+            if (userData.role_id === 3) {
+                userInfo = await studentService.getStudentByUserId(
+                    userData.user_id
+                )
+            } else if (userData.role_id === 2) {
+                userInfo = await teacherService.getTeacherByUserId(
+                    userData.user_id
+                )
+            }
+
+            return res.json({
+                user_id: userData.user_id,
+                email: userData.email,
+                role_id: userData.role_id,
+                role_name: userData.role_name,
+                ...userInfo,
+            })
         } catch (e) {
             next(e)
         }

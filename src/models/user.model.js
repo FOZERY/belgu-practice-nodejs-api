@@ -18,7 +18,7 @@ class UserModel {
         return rows[0]
     }
 
-    async createUser(params, client) {
+    async createUser(params, client = db) {
         const query = `INSERT INTO "user" (email, password, user_role_id)
         VALUES($1, $2, $3)
         RETURNING *

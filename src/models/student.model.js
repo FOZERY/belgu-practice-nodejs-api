@@ -4,10 +4,10 @@ class StudentModel {
     async getStudentByUserId(user_id) {
         const query = `SELECT student.id AS student_id, first_name, second_name, third_name, group_id, group_number
         FROM student
-        LEFT JOIN group ON group.id = student.group_id
+        LEFT JOIN "group" ON "group".id = student.group_id
         WHERE user_id = $1`
 
-        const { rows } = db.query(query, [user_id])
+        const { rows } = await db.query(query, [user_id])
         return rows[0]
     }
 
