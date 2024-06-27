@@ -7,20 +7,17 @@ module.exports = function (roles) {
         }
 
         try {
-            const token = req.headers.authorization.split(' ')[1]
+            const token = req.headers.authorization?.split(' ')[1]
 
             if (!token) {
                 return res
-                    .status(403)
+                    .status(401)
                     .json({ message: 'Пользователь не авторизован' })
             }
 
-            const { user_role_id } = jwt.verify(
-                token,
-                process.env.JWT_SECRET_KEY
-            )
+            const { role_id } = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
-            const hasRole = roles.includes(user_role_id)
+            const hasRole = roles.includes(role_id)
 
             if (!hasRole) {
                 return res.status(403).json({ message: 'У вас нет доступа' })
@@ -28,10 +25,7 @@ module.exports = function (roles) {
 
             next()
         } catch (e) {
-            console.log(e)
-            return res
-                .status(403)
-                .json({ message: 'Пользователь не авторизован' })
+            next(e)
         }
     }
 }
