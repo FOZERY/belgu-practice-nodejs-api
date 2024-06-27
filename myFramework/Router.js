@@ -1,6 +1,7 @@
 module.exports = class Router {
     constructor() {
         this.endpoints = new Map()
+        this.sortedEndpoints = []
     }
 
     request(method = 'GET', path, handlers) {
@@ -14,6 +15,11 @@ module.exports = class Router {
         }
 
         endpoint.set(method, handlers)
+
+        this.sortedEndpoints = [...this.endpoints].sort(([pathA], [pathB]) => {
+            const countParams = (path) => (path.match(/:[^/]+/g) || []).length
+            return countParams(pathA) - countParams(pathB)
+        })
     }
 
     use(basePath, router) {
@@ -46,14 +52,14 @@ module.exports = class Router {
     }
 
     match(pathname) {
-        for (let [path, methods] of this.endpoints) {
+        for (let [path, methods] of this.sortedEndpoints) {
             const paramNames = []
             const regexPath = path.replace(/:([^/]+)/g, (_, key) => {
                 paramNames.push(key)
                 return '([^/]+)'
             })
-            const match = pathname.match(new RegExp(`^${regexPath}/?$`))
 
+            const match = pathname.match(new RegExp(`^${regexPath}/?$`))
             if (match) {
                 const params = {}
                 paramNames.forEach((name, index) => {
