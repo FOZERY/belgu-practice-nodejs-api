@@ -1,18 +1,6 @@
-const ApiError = require('../error/ApiError')
-const bcrypt = require('bcryptjs')
 const { validationResult } = require('express-validator')
-const jwt = require('jsonwebtoken')
-
-const generateAccessToken = (params) => {
-    const payload = {
-        ...params,
-    }
-    return jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '24h' })
-}
 
 const userService = require('../services/user.service')
-const studentService = require('../services/student.service')
-const teacherService = require('../services/teacher.service')
 
 class userController {
     async getOneUser(req, res, next) {
@@ -50,73 +38,7 @@ class userController {
                 })
             }
 
-            const {
-                email,
-                password,
-                user_role_id = 3,
-                first_name,
-                second_name,
-                third_name,
-                group_id,
-                position_id,
-                department_id,
-            } = req.body
-
-            const candidate = await userService.getOne({ email })
-            if (candidate) {
-                return res.status(400).json({
-                    message: 'Пользователь с таким Email уже существует',
-                })
-            }
-
-            const hashPassword = bcrypt.hashSync(password, 7)
-
-            if (user_role_id === 3) {
-                if (!group_id) {
-                    return res.status(404).json({
-                        message: 'Не был указан идентификатор группы студента',
-                    })
-                }
-
-                await userService.createUserStudent({
-                    email,
-                    password: hashPassword,
-                    user_role_id,
-                    first_name,
-                    second_name,
-                    third_name,
-                    group_id,
-                })
-            } else if (user_role_id === 2) {
-                if (!position_id) {
-                    return res.status(400).json({
-                        message: 'Не была указана должность преподавателя',
-                    })
-                }
-
-                if (!department_id) {
-                    return res.status(400).json({
-                        message: 'Не был указан факультет преподавателя',
-                    })
-                }
-
-                await userService.createUserTeacher({
-                    email,
-                    password: hashPassword,
-                    user_role_id,
-                    first_name,
-                    second_name,
-                    third_name,
-                    position_id,
-                    department_id,
-                })
-            } else {
-                await userService.createUser({
-                    email,
-                    password: hashPassword,
-                    user_role_id,
-                })
-            }
+            await userService.registerUser(req.body)
 
             return res.json({ message: 'Пользователь успешно зарегистрирован' })
         } catch (e) {
@@ -133,29 +55,8 @@ class userController {
                     errors: errors.errors,
                 })
             }
-            const { email, password } = req.body
-            const user = await userService.getOne({ email })
 
-            if (!user) {
-                return res.status(404).json({
-                    message: `Пользователь с Email ${email} не найден.`,
-                })
-            }
-
-            const validPassword = bcrypt.compareSync(password, user.password)
-
-            if (!validPassword) {
-                return res.status(400).json({
-                    message: `Неправильный пароль.`,
-                })
-            }
-
-            const token = generateAccessToken({
-                user_id: user.id,
-                email: user.email,
-                role_id: user.user_role_id,
-                role_name: user.role_name,
-            })
+            const token = await userService.loginUser(req.body)
 
             return res.json({ token })
         } catch (e) {
@@ -166,12 +67,8 @@ class userController {
     async check(req, res, next) {
         try {
             const { userData } = req
-            const token = generateAccessToken({
-                user_id: userData.user_id,
-                email: userData.email,
-                role_id: userData.role_id,
-                role_name: userData.role_name,
-            })
+
+            const token = await userService.authUser(userData)
 
             return res.json({ token })
         } catch (e) {
@@ -183,24 +80,9 @@ class userController {
         try {
             const { userData } = req
 
-            let userInfo
-            if (userData.role_id === 3) {
-                userInfo = await studentService.getStudentByUserId(
-                    userData.user_id
-                )
-            } else if (userData.role_id === 2) {
-                userInfo = await teacherService.getTeacherByUserId(
-                    userData.user_id
-                )
-            }
+            const userInfo = await userService.getUserFullInfo(userData)
 
-            return res.json({
-                user_id: userData.user_id,
-                email: userData.email,
-                role_id: userData.role_id,
-                role_name: userData.role_name,
-                ...userInfo,
-            })
+            return res.json(userInfo)
         } catch (e) {
             next(e)
         }
