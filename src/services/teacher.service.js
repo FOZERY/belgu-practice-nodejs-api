@@ -10,16 +10,7 @@ class TeacherService {
     }
 
     async getTeacherLessons(teacher_id) {
-        const lessons = await LessonModel.getLessonsByTeacherId(teacher_id)
-
-        for (let i = 0, length = lessons.length; i < length; i++) {
-            const lesson = lessons[i]
-            if (lesson.groups.length === 1 && !lesson.groups.group_id) {
-                lesson.groups = []
-            }
-        }
-
-        return lessons
+        return await LessonModel.getLessonsByTeacherId(teacher_id)
     }
 
     async getTeacherByUserId(user_id) {

@@ -32,7 +32,7 @@ LEFT JOIN classroom ON lesson.classroom_id = classroom.id
 LEFT JOIN lesson_type ON lesson.lesson_type_id = lesson_type.id
 LEFT JOIN group_lesson ON lesson.id = group_lesson.lesson_id
 LEFT JOIN "group" ON "group".id = group_lesson.group_id
-
+ 
 
 WHERE teacher_id = $1
 
