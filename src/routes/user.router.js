@@ -91,7 +91,6 @@ const getUserValidators = [
 router.get('/', roleMiddleware([1]), userController.getAllUsers)
 router.get('/auth', authMiddleware, userController.check)
 router.get('/info', authMiddleware, userController.getUserFullInfo)
-
 router.get(
     '/:id',
     getUserValidators,

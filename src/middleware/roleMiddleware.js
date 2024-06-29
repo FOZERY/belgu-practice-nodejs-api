@@ -11,21 +11,24 @@ module.exports = function (roles) {
             const token = req.headers.authorization?.split(' ')[1]
 
             if (!token) {
-                next(ApiError.unauthorized('Пользователь не авторизован'))
+                throw ApiError.unauthorized('Пользователь не авторизован')
             }
 
-            const { role_id } = jwt.verify(token, process.env.JWT_SECRET_KEY)
+            const { user_role_id } = jwt.verify(
+                token,
+                process.env.JWT_SECRET_KEY
+            )
 
-            const hasRole = roles.includes(role_id)
+            const hasRole = roles.includes(user_role_id)
 
             if (!hasRole) {
-                next(ApiError.forbidden('У вас нет доступа.'))
+                throw ApiError.forbidden('У вас нет доступа.')
             }
 
             next()
         } catch (e) {
             if (e instanceof ApiError) {
-                next()
+                next(e)
             } else {
                 next(ApiError.unauthorized('Пользователь не авторизован'))
             }

@@ -1,7 +1,5 @@
 const userModel = require('../models/user.model')
 const { transaction } = require('../../database/db')
-const studentModel = require('../models/student.model')
-const teacherModel = require('../models/teacher.model')
 const bcrypt = require('bcryptjs')
 
 const ApiError = require('../error/ApiError')
@@ -23,13 +21,7 @@ class UserService {
     }
 
     async getOne(params) {
-        const user = await userModel.getOne(params)
-        return user
-    }
-
-    async createUserAdmin(params) {
-        const user = await userModel.createUser(params)
-        return user
+        return await userModel.getOne(params)
     }
 
     async registerUser(userData) {
@@ -45,7 +37,7 @@ class UserService {
             department_id,
         } = userData
 
-        const candidate = await userModel.getOne({ email })
+        const candidate = await this.getOne({ email })
         if (candidate) {
             throw ApiError.badRequest(
                 'Пользователь с таким email уже существует.'
@@ -101,7 +93,7 @@ class UserService {
                 department_id,
             })
         } else if (user_role_id === 1) {
-            await this.createUserAdmin({
+            await this.createUser({
                 email,
                 password: hashPassword,
                 user_role_id,
@@ -152,10 +144,15 @@ class UserService {
         return token
     }
 
+    async createUser(params) {
+        const { client, ...userData } = params
+        return await userModel.createUser(userData, client)
+    }
+
     async createUserStudent(params) {
         return await transaction(async (client) => {
-            const user = await userModel.createUser(params, client)
-            const student = await studentModel.createStudent(
+            const user = await this.createUser(params, client)
+            const student = await studentService.createStudent(
                 {
                     user_id: user.id,
                     first_name: params.first_name,
@@ -172,18 +169,16 @@ class UserService {
 
     async createUserTeacher(params) {
         return await transaction(async (client) => {
-            const user = await userModel.createUser(params, client)
-            const teacher = await teacherModel.createTeacher(
-                {
-                    user_id: user.id,
-                    first_name: params.first_name,
-                    second_name: params.second_name,
-                    third_name: params.third_name,
-                    department_id: params.department_id,
-                    position_id: params.position_id,
-                },
-                client
-            )
+            const user = await this.createUser(params)
+            const teacher = await teacherService.createTeacher({
+                user_id: user.id,
+                first_name: params.first_name,
+                second_name: params.second_name,
+                third_name: params.third_name,
+                department_id: params.department_id,
+                position_id: params.position_id,
+                client,
+            })
 
             return { user, teacher }
         })

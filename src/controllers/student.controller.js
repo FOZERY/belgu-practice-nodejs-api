@@ -10,7 +10,10 @@ class studentController {
                 throw ApiError.badRequest('Не задан ID')
             }
 
-            if (id !== req.userData.student_id) {
+            if (
+                id !== req.userData.student_id &&
+                req.userData.user_role_id !== 1
+            ) {
                 return res.status(403).json('Доступ запрещен')
             }
 

@@ -11,7 +11,7 @@ class StudentModel {
         return rows[0]
     }
 
-    async createStudent(params, client) {
+    async createStudent(params, client = db) {
         const query = `INSERT INTO student (first_name, second_name, third_name, group_id, user_id)
         VALUES($1,$2,$3,$4,$5)
         RETURNING *`

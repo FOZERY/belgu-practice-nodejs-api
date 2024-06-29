@@ -1,16 +1,22 @@
-const LessonModel = require('../models/lesson.model')
-const CourseModel = require('../models/course.model')
 const TeacherModel = require('../models/teacher.model')
+
+const CourseService = require('../services/course.service')
+const LessonService = require('../services/lesson.service')
 
 class TeacherService {
     async getAll() {}
 
+    async createTeacher(params) {
+        const { client, ...teacherData } = params
+        return await TeacherModel.createTeacher(teacherData, client)
+    }
+
     async getTeacherCourses(teacher_id) {
-        return await CourseModel.getCoursesByTeacherId(teacher_id)
+        return await CourseService.getCoursesByTeacherId(teacher_id)
     }
 
     async getTeacherLessons(teacher_id) {
-        return await LessonModel.getLessonsByTeacherId(teacher_id)
+        return await LessonService.getLessonsByTeacherId(teacher_id)
     }
 
     async getTeacherByUserId(user_id) {

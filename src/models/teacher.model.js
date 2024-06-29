@@ -1,4 +1,4 @@
-const { pool } = require('../../database/db')
+const db = require('../../database/db')
 
 class TeacherModel {
     async getTeacherByUserId(user_id) {
@@ -7,11 +7,11 @@ class TeacherModel {
         LEFT JOIN position ON position.id = teacher.position_id
         LEFT JOIN department ON department.id = teacher.department_id
         WHERE teacher.user_id = $1`
-        const { rows } = await pool.query(query, [user_id])
+        const { rows } = await db.query(query, [user_id])
         return rows[0]
     }
 
-    async createTeacher(params, client) {
+    async createTeacher(params, client = db) {
         const query = `INSERT INTO teacher (first_name, second_name, third_name, department_id, position_id, user_id)
         VALUES($1,$2,$3,$4,$5,$6)
         RETURNING *`
