@@ -13,6 +13,23 @@ class courseController {
             next(e)
         }
     }
+
+    async getCourseGroupGrades(req, res, next) {
+        try {
+            const { id: course_id, groupId: group_id } = req.params
+            const { page = 1, limit = 30 } = req.query
+
+            const courseGroupGrades = await courseService.getCourseGroupGrades(
+                Number(course_id),
+                Number(group_id),
+                page,
+                limit
+            )
+            return res.json(courseGroupGrades)
+        } catch (e) {
+            next(e)
+        }
+    }
 }
 
 module.exports = new courseController()

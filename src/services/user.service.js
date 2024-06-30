@@ -144,8 +144,9 @@ class UserService {
         return token
     }
 
-    async createUser(params) {
-        const { client, ...userData } = params
+    async createUser(params, client) {
+        const { ...userData } = params
+
         return await userModel.createUser(userData, client)
     }
 
@@ -170,15 +171,17 @@ class UserService {
     async createUserTeacher(params) {
         return await transaction(async (client) => {
             const user = await this.createUser(params)
-            const teacher = await teacherService.createTeacher({
-                user_id: user.id,
-                first_name: params.first_name,
-                second_name: params.second_name,
-                third_name: params.third_name,
-                department_id: params.department_id,
-                position_id: params.position_id,
-                client,
-            })
+            const teacher = await teacherService.createTeacher(
+                {
+                    user_id: user.id,
+                    first_name: params.first_name,
+                    second_name: params.second_name,
+                    third_name: params.third_name,
+                    department_id: params.department_id,
+                    position_id: params.position_id,
+                },
+                client
+            )
 
             return { user, teacher }
         })

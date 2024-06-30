@@ -6,8 +6,8 @@ const LessonService = require('../services/lesson.service')
 class TeacherService {
     async getAll() {}
 
-    async createTeacher(params) {
-        const { client, ...teacherData } = params
+    async createTeacher(params, client) {
+        const { ...teacherData } = params
         return await TeacherModel.createTeacher(teacherData, client)
     }
 

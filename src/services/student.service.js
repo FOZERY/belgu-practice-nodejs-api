@@ -2,8 +2,8 @@ const StudentModel = require('../models/student.model')
 const CourseService = require('../services/course.service')
 
 class StudentService {
-    async createStudent(params) {
-        const { client, ...studentData } = params
+    async createStudent(params, client) {
+        const { ...studentData } = params
         return await StudentModel.createStudent(studentData, client)
     }
 

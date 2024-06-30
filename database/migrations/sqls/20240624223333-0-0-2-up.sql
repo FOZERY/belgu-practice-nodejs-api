@@ -92,15 +92,15 @@ INSERT INTO "group" (id, department_id, group_number, group_name) VALUES
 -- Insert students
 INSERT INTO student (id, group_id, user_id, first_name, second_name, third_name) VALUES
 (1, 1, 16, 'Tom', 'Thompson', 'J'),
-(2, 2, 17, 'Jerry', 'Gomez', 'K'),
-(3, 3, 18, 'Anna', 'Williams', 'L'),
-(4, 4, 19, 'Mike', 'Taylor', 'M'),
-(5, 5, 20, 'Sarah', 'Martinez', 'N'),
-(6, 6, 21, 'David', 'Rodriguez', 'O'),
-(7, 7, 22, 'Emma', 'Garcia', 'P'),
-(8, 8, 23, 'Lucas', 'Hernandez', 'Q'),
-(9, 9, 24, 'Olivia', 'Lopez', 'R'),
-(10, 10, 25, 'Sophia', 'Gonzalez', 'S');
+(2, 1, 17, 'Jerry', 'Gomez', 'K'),
+(3, 1, 18, 'Anna', 'Williams', 'L'),
+(4, 1, 19, 'Mike', 'Taylor', 'M'),
+(5, 1, 20, 'Sarah', 'Martinez', 'N'),
+(6, 1, 21, 'David', 'Rodriguez', 'O'),
+(7, 1, 22, 'Emma', 'Garcia', 'P'),
+(8, 1, 23, 'Lucas', 'Hernandez', 'Q'), 
+(9, 1, 24, 'Olivia', 'Lopez', 'R'),
+(10, 1, 25, 'Elliot', 'Alderson', 'J');
 
 -- Insert courses
 INSERT INTO course (id, course_name, course_description) VALUES
@@ -131,15 +131,15 @@ INSERT INTO group_course (group_id, course_id) VALUES
 -- Insert student courses
 INSERT INTO student_course (id, course_id, student_id) VALUES
 (1, 1, 1),
-(2, 2, 2),
-(3, 3, 3),
-(4, 4, 4),
-(5, 5, 5),
-(6, 6, 6),
-(7, 7, 7),
-(8, 8, 8),
-(9, 9, 9),
-(10, 10, 10);
+(2, 1, 2),
+(3, 1, 3),
+(4, 1, 4),
+(5, 1, 5),
+(6, 1, 6),
+(7, 1, 7),
+(8, 1, 8),
+(9, 1, 9),
+(10, 1, 10);
 
 -- Insert classrooms
 INSERT INTO classroom (id, classroom_building, classroom_number) VALUES
@@ -170,20 +170,34 @@ INSERT INTO lesson_type (id, type_name) VALUES
 -- Insert lessons
 INSERT INTO lesson (id, course_id, teacher_id, classroom_id, lesson_type_id, lesson_date, start_time, end_time) VALUES
 (1, 1, 1, 1, 1, '2024-06-01', '09:00', '10:30'),
-(2, 2, 2, 2, 2, '2024-06-02', '10:00', '11:30'),
-(3, 3, 3, 3, 3, '2024-06-03', '11:00', '12:30'),
+(2, 1, 1, 2, 2, '2024-06-02', '10:00', '11:30'),
+(3, 1, 1, 3, 3, '2024-06-03', '11:00', '12:30'),
 (4, 4, 4, 4, 4, '2024-06-04', '12:00', '13:30'),
 (5, 5, 5, 5, 5, '2024-06-05', '13:00', '14:30'),
 (6, 6, 6, 6, 6, '2024-06-06', '14:00', '15:30'),
 (7, 7, 7, 7, 7, '2024-06-07', '15:00', '16:30'),
 (8, 8, 8, 8, 8, '2024-06-08', '16:00', '17:30'),
 (9, 9, 9, 9, 9, '2024-06-09', '17:00', '18:30'),
-(10, 10, 10, 10, 10, '2024-06-10', '18:00', '19:30');
+(10, 10, 1, 10, 10, '2024-06-10', '18:00', '19:30'),
+(11, 1, 1, 10, 10, '2024-06-11', '18:00', '19:30'),
+(12, 1, 1, 10, 10, '2024-06-12', '18:00', '19:30'),
+(13, 1, 1, 10, 10, '2024-06-13', '18:00', '19:30'),
+(14, 1, 1, 10, 10, '2024-06-14', '18:00', '19:30'),
+(15, 1, 1, 10, 10, '2024-06-15', '18:00', '19:30'),
+(16, 1, 1, 10, 10, '2024-06-16', '18:00', '19:30'),
+(17, 1, 1, 10, 10, '2024-06-17', '18:00', '19:30');
 
 INSERT INTO group_lesson (group_id, lesson_id) VALUES
 (1,1),
-(2,1),
-(3,1); 
+(1,2),
+(1,3),
+(1,11),
+(1,12),
+(1,13),
+(1,14),
+(1,15),
+(1,16),
+(1,17);
 
 -- Insert attendance statuses
 INSERT INTO attendance_status (id, attendance_status) VALUES
@@ -222,14 +236,44 @@ INSERT INTO teacher_course (teacher_id, course_id) VALUES
 -- Insert grades
 INSERT INTO grade (id, student_course_id, lesson_id, grade, grade_comment) VALUES
 (1, 1, 1, 90, 'Good job'),
-(2, 2, 2, 85, 'Well done'),
-(3, 3, 3, 88, 'Nice work'),
-(4, 4, 4, 92, 'Excellent'),
-(5, 5, 5, 87, 'Keep it up'),
-(6, 6, 6, 91, 'Very good'),
-(7, 7, 7, 89, 'Great effort'),
-(8, 8, 8, 93, 'Outstanding'),
-(9, 9, 9, 86, 'Good understanding'),
-(10, 10, 10, 94, 'Exceptional');
+(2, 2, 1, 85, 'Well done'),
+(3, 3, 1, 88, 'Nice work'),
+(4, 4, 1, 92, 'Excellent'),
+(5, 5, 1, 87, 'Keep it up'),
+(6, 6, 1, 91, 'Very good'),
+(7, 7, 1, 89, 'Great effort'),
+(8, 8, 1, 93, 'Outstanding'),
+(9, 9, 1, 86, 'Good understanding'),
+(10, 10, 1, 94, 'Exceptional'),
+(11, 1, 2, 90, 'Good job'),
+(12, 2, 2, 85, 'Well done'),
+(13, 3, 2, 88, 'Nice work'),
+(14, 4, 2, 92, 'Excellent'),
+(15, 5, 2, 87, 'Keep it up'),
+(16, 6, 2, 91, 'Very good'),
+(17, 7, 2, 89, 'Great effort'),
+(18, 8, 2, 93, 'Outstanding'),
+(19, 9, 2, 86, 'Good understanding'),
+(20, 10, 2, 94, 'Exceptional'),
+(21, 10, 3, 94, 'Exceptional'),
+(22, 2, 3, 85, 'Well done'),
+(23, 3, 3, 88, 'Nice work'),
+(24, 4, 3, 92, 'Excellent'),
+(25, 5, 3, 87, 'Keep it up'),
+(26, 6, 3, 91, 'Very good'),
+(27, 7, 3, 89, 'Great effort'),
+(28, 8, 3, 93, 'Outstanding'),
+(29, 9, 3, 86, 'Good understanding'),
+(30, 10, 3, 94, 'Exceptional'),
+(31, 1, 11, 94, 'Exceptional'),
+(32, 2, 11, 85, 'Well done'),
+(33, 3, 11, 88, 'Nice work'),
+(34, 4, 11, 92, 'Excellent'),
+(35, 5, 11, 87, 'Keep it up'),
+(36, 6, 11, 91, 'Very good'),
+(37, 7, 11, 89, 'Great effort'),
+(38, 8, 11, 93, 'Outstanding'),
+(39, 9, 11, 86, 'Good understanding'),
+(40, 10, 11, 94, 'Exceptional');
 
 COMMIT;

@@ -19,4 +19,10 @@ router.get(
     courseController.getCourseFullInfo
 )
 
+router.get(
+    '/:id/group/:groupId/grades',
+    authMiddleware,
+    courseController.getCourseGroupGrades
+)
+
 module.exports = router

@@ -2,6 +2,8 @@ const courseModel = require('../models/course.model')
 
 const ApiError = require('../error/ApiError')
 
+const gradeService = require('./grade.service')
+
 class CourseService {
     async getCourseFullInfo(course_id, userData) {
         const { user_role_id } = userData
@@ -43,6 +45,17 @@ class CourseService {
 
     async getCoursesByTeacherId(id) {
         return await courseModel.getCoursesByTeacherId(id)
+    }
+
+    async getCourseGroupGrades(course_id, group_id, page, limit) {
+        // TODO Сделать проверку на того, что студент принадлежит группе и курсу, либо учителю принадлежит курс
+
+        return await gradeService.getGradesByCourseAndGroup(
+            course_id,
+            group_id,
+            page,
+            limit
+        )
     }
 }
 
