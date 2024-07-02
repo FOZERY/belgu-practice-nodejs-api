@@ -19,13 +19,14 @@ class courseController {
             const { id: course_id, groupId: group_id } = req.params
             const { page = 1, limit = 30 } = req.query
 
-            const courseGroupGrades = await courseService.getCourseGroupGrades(
-                Number(course_id),
-                Number(group_id),
-                page,
-                limit
-            )
-            return res.json(courseGroupGrades)
+            const { lessons, total } =
+                await courseService.getCourseGroupLessonsWithGrades(
+                    Number(course_id),
+                    Number(group_id),
+                    page,
+                    limit
+                )
+            return res.json({ lessons, total, page, limit })
         } catch (e) {
             next(e)
         }

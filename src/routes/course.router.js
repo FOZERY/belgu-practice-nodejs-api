@@ -20,7 +20,7 @@ router.get(
 )
 
 router.get(
-    '/:id/group/:groupId/grades',
+    '/:id/group/:groupId/lessons',
     authMiddleware,
     courseController.getCourseGroupGrades
 )

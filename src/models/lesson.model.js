@@ -42,6 +42,55 @@ GROUP BY lesson.id, course.id, course.course_name, teacher.id, position.position
         const { rows } = await db.query(query, [id])
         return rows
     }
+
+    async getLessonsWithGradesByCourseAndGroup(
+        course_id,
+        group_id,
+        page = 1,
+        limit = 30
+    ) {
+        const offset = (page - 1) * limit
+
+        const query = `SELECT lesson.id AS lesson_id, lesson_date, 
+ARRAY_AGG(json_build_object(
+                'student_id', student.id,
+                'first_name', student.first_name,
+                'second_name', student.second_name,
+                'third_name', student.third_name, 
+                'grade', grade.grade,
+                'grade_comment', grade.grade_comment 
+)) AS students
+
+
+FROM lesson
+LEFT JOIN grade ON grade.lesson_id = lesson.id
+LEFT JOIN group_lesson ON group_lesson.lesson_id = lesson.id
+LEFT JOIN student_course ON grade.student_course_id = student_course.id
+LEFT JOIN student ON student_course.student_id = student.id
+
+WHERE lesson.course_id = $1 AND group_lesson.group_id = $2
+
+GROUP BY lesson.id, lesson_date
+ORDER BY lesson_date
+
+LIMIT $3 OFFSET $4 
+`
+
+        const countQuery = `
+        SELECT COUNT(DISTINCT lesson.id) AS total
+        FROM lesson
+        LEFT JOIN group_lesson ON group_lesson.lesson_id = lesson.id
+        WHERE lesson.course_id = $1 AND group_lesson.group_id = $2`
+
+        const [rowsResult, countResult] = await Promise.all([
+            db.query(query, [course_id, group_id, limit, offset]),
+            db.query(countQuery, [course_id, group_id]),
+        ])
+
+        const lessons = rowsResult.rows
+        const { total } = countResult.rows[0]
+        return { lessons, total }
+    }
 }
 
 module.exports = new LessonModel()
