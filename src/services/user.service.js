@@ -170,7 +170,7 @@ class UserService {
 
     async createUserTeacher(params) {
         return await transaction(async (client) => {
-            const user = await this.createUser(params)
+            const user = await this.createUser(params, client)
             const teacher = await teacherService.createTeacher(
                 {
                     user_id: user.id,
