@@ -100,7 +100,6 @@ router.get(
 
 router.post(
     '/registration',
-    roleMiddleware([1]),
     registrationValidators,
     userController.registration
 )
