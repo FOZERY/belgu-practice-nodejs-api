@@ -59,7 +59,7 @@ CREATE TABLE grade_type(id SERIAL PRIMARY KEY, grade VARCHAR(5));
 CREATE TABLE grade(
     student_id INT,
     lesson_id INT,
-    grade_type_id INT,
+    grade_type_id INT DEFAULT 7, 
     grade_comment VARCHAR(255),
     PRIMARY KEY(student_id, lesson_id)
 );
