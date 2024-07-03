@@ -49,18 +49,19 @@ CREATE TABLE course(
 );
 
 CREATE TABLE student_course(
-    id SERIAL PRIMARY KEY,
-    course_id INT NOT NULL,
-    student_id INT NOT NULL,
-    UNIQUE(course_id, student_id)
+    course_id INT,
+    student_id INT,
+    PRIMARY KEY(course_id, student_id)
 );
 
+CREATE TABLE grade_type(id SERIAL PRIMARY KEY, grade VARCHAR(5));
+
 CREATE TABLE grade(
-    id SERIAL PRIMARY KEY,
-    student_course_id INT NOT NULL,
-    lesson_id INT NOT NULL,
-    grade INT,
-    grade_comment VARCHAR(255)
+    student_id INT,
+    lesson_id INT,
+    grade_type_id INT,
+    grade_comment VARCHAR(255),
+    PRIMARY KEY(student_id, lesson_id)
 );
 
 CREATE TABLE lesson(
@@ -85,17 +86,7 @@ CREATE TABLE classroom(
     classroom_number VARCHAR(5) NOT NULL
 );
 
-CREATE TABLE attendance(
-    id SERIAL PRIMARY KEY,
-    student_id INT NOT NULL,
-    lesson_id INT NOT NULL,
-    attendance_status_id INT NOT NULL
-);
 
-CREATE TABLE attendance_status(
-    id SERIAL PRIMARY KEY,
-    attendance_status VARCHAR(255) NOT NULL
-);
 
 CREATE TABLE teacher_course(
     teacher_id INT,
@@ -146,25 +137,20 @@ ALTER TABLE teacher ADD CONSTRAINT fk_teacher_user FOREIGN KEY (user_id) REFEREN
 ALTER TABLE student_course ADD CONSTRAINT fk_student_course_course FOREIGN KEY (course_id) REFERENCES course(id);
 ALTER TABLE student_course ADD CONSTRAINT fk_student_course_student FOREIGN KEY (student_id) REFERENCES student(id);
 
-ALTER TABLE grade ADD CONSTRAINT fk_grade_student_course FOREIGN KEY (student_course_id) REFERENCES student_course(id);
 ALTER TABLE grade ADD CONSTRAINT fk_grade_lesson FOREIGN KEY (lesson_id) REFERENCES lesson(id);
+ALTER TABLE grade ADD CONSTRAINT fk_grade_student FOREIGN KEY (student_id) REFERENCES student(id);
+ALTER TABLE grade ADD CONSTRAINT fk_grade_grade_type FOREIGN KEY (grade_type_id) REFERENCES grade_type(id);
 
 ALTER TABLE lesson ADD CONSTRAINT fk_lesson_course FOREIGN KEY (course_id) REFERENCES course(id);
 ALTER TABLE lesson ADD CONSTRAINT fk_lesson_teacher FOREIGN KEY (teacher_id) REFERENCES teacher(id);
 ALTER TABLE lesson ADD CONSTRAINT fk_lesson_classroom FOREIGN KEY (classroom_id) REFERENCES classroom(id);
 ALTER TABLE lesson ADD CONSTRAINT fk_lesson_lesson_type FOREIGN KEY (lesson_type_id) REFERENCES lesson_type(id);
 
-ALTER TABLE attendance ADD CONSTRAINT fk_attendance_student FOREIGN KEY (student_id) REFERENCES student(id);
-ALTER TABLE attendance ADD CONSTRAINT fk_attendance_lesson FOREIGN KEY (lesson_id) REFERENCES lesson(id);
-ALTER TABLE attendance ADD CONSTRAINT fk_attendance_attendance_status FOREIGN KEY (attendance_status_id) REFERENCES attendance_status(id);
 
 CREATE INDEX idx_lesson_teacher ON lesson(teacher_id);
 CREATE INDEX idx_lesson_course ON lesson(course_id);
 CREATE INDEX idx_lesson_lessonType ON lesson(lesson_type_id);
 CREATE INDEX idx_lesson_classroom ON lesson(classroom_id);
-
-CREATE INDEX idx_student_course_course ON student_course(course_id);
-CREATE INDEX idx_student_course_student ON student_course(student_id);
 
 CREATE INDEX idx_teacher_department ON teacher(department_id);
 CREATE INDEX idx_teacher_secondName ON teacher(second_name);
@@ -183,11 +169,6 @@ CREATE INDEX idx_student_userId ON student(user_id);
 
 CREATE INDEX idx_course_courseName ON course(course_name);
 
-CREATE INDEX idx_grade_studentCourseId ON grade(student_course_id);
-CREATE INDEX idx_grade_lesson ON grade(lesson_id);
-
-CREATE INDEX idx_attendance_studentId ON attendance(student_id);
-CREATE INDEX idx_attendance_lessonId ON attendance(lesson_id);
-CREATE INDEX idx_attendance_attendanceStatusId ON attendance(attendance_status_id);
+CREATE INDEX idx_grade_gradeTypeId ON grade(grade_type_id);
 
 COMMIT;
