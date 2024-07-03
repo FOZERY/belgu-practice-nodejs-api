@@ -7,6 +7,7 @@ const courseRouter = require('./course.router')
 const studentRouter = require('./student.router')
 const groupRouter = require('./group.router')
 const gradeRouter = require('./grade.router')
+const lessonRouter = require('./lesson.router')
 
 router.use('/user', userRouter)
 router.use('/teacher', teacherRouter)
@@ -14,5 +15,6 @@ router.use('/course', courseRouter)
 router.use('/student', studentRouter)
 router.use('/group', groupRouter)
 router.use('/grade', gradeRouter)
+router.use('/lesson', lessonRouter)
 
 module.exports = router

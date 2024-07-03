@@ -18,6 +18,10 @@ class LessonService {
             limit
         )
     }
+
+    async getLessonsByGroup(group_id, from, to) {
+        return await LessonModel.getLessonsByGroup(group_id, from, to)
+    }
 }
 
 module.exports = new LessonService()
