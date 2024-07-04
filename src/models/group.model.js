@@ -17,6 +17,12 @@ ORDER BY second_name `
         const { rows } = await db.query(query, [id])
         return rows
     }
+
+    async getGroups(group_number) {
+        const query = `SELECT "group".id, department_id, department_name, group_number, group_name FROM "group" LEFT JOIN department ON department.id = "group".department_id WHERE group_number ILIKE $1`
+        const { rows } = await db.query(query, [`${group_number}%`])
+        return rows
+    }
 }
 
 module.exports = new GroupModel()

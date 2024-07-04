@@ -2,7 +2,6 @@ const courseModel = require('../models/course.model')
 
 const ApiError = require('../error/ApiError')
 
-const gradeService = require('./grade.service')
 const lessonService = require('./lesson.service')
 
 class CourseService {
